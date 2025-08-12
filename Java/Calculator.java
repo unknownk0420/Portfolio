@@ -1,6 +1,6 @@
-import java.util.Scanner;
+import java.util.*;
 
-public class Java_Method_Practice_Basics_Project1 {
+public class Calculator {
     public static int add(int number1, int number2) {
         return number1 + number2;
     }
