@@ -6,7 +6,7 @@ import java.util.*;
 public class Dog_Manager {
     String dogName;
     int dogAge;
-    String dogBreed;//품종
+    String dogBreed;
 
     public void register() {
         System.out.println("이름: " + dogName);
