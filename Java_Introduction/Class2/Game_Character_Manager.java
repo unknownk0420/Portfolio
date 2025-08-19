@@ -30,7 +30,7 @@ class Games {
     public void characterLevelUp() {
         this.bLevel++;
         this.bHp += 20;
-        System.out.println(getCharacterName() + "이(가) 레벨업 했습니다. (레벨: " + getBHp() + ", HP: " + getBHp());
+        System.out.println(getCharacterName() + "이(가) 레벨업 했습니다. (레벨: " + getBLevel() + ", HP: " + getBHp());
     }
 
     public void characterHeal(){
