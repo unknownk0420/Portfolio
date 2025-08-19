@@ -33,7 +33,7 @@ class Games {
         System.out.println(getCharacterName() + "이(가) 레벨업 했습니다. (레벨: " + getBLevel() + ", HP: " + getBHp());
     }
 
-    public void characterHeal(){
+    public void characterHeal() {
         if(this.bHp < 100) {
             this.bHp = Math.min(this.bHp + 10, 100);
         } else{
