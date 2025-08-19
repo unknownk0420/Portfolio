@@ -1,4 +1,5 @@
 import java.util.Scanner;
+
 class Games {
     private String characterName;
     private int bLevel;
