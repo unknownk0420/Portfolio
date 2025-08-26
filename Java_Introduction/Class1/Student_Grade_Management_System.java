@@ -1,3 +1,4 @@
+//get -> 값을 꺼냄, set -> 값을 저장, 일반 메서드 -> 기능 수행
 import java.util.*;
 
 class Student_Grade_Management {
