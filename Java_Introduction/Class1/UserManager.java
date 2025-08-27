@@ -38,9 +38,9 @@ class User {
     }
 }
 class UserInfo {
-    //전체 코드에서 하나의 객체만 생성하여 사용하기 위해 싱글톤 패턴을 함
+    //전체 코드에서 여러 명의 사용자, 사용자마다 객체가 다를 경우는 모든 사용자 정보가 동일한 객체에 덮어쓰기가 되서 이 경우 싱글톤 패턴을 쓰면 안됨 그러나 전체 코드에서 하나의 객체만 생성하여 사용하기 위해 싱글톤 패턴을 씀
     private final static UserInfo userInfo = new UserInfo();
-    private User[] users = new User[Constants.MAX_USER];//참조 자료형이 User인 배열 선언
+    private User[] users = new User[Constants.MAX_USER];// 여러 개의 User 객체(참조형)를 저장하기 위한 배열 선언
     private int count = 0;
 
     private UserInfo() {
