@@ -136,7 +136,7 @@ public class UserManager {
                     sc.nextLine();//입력 버퍼 정리
                     System.out.println("역할 입력(없으면 엔터):");
                     String role = sc.nextLine();
-                    if(role.trim().isEmpty()){//trim()으로 양 끝 빈공간 삭제를 하고 빈공간이면 조건문이 실행
+                    if(role.trim().isEmpty()){//trim()으로 양끝 공백을 삭제를 하고 빈공간(isEmpty())이면 조건문이 실행
                         userInfo.userAdd(new User(name, age));//메서드 오버로딩을 하기 위해 if문을 씀
                     } else {
                         userInfo.userAdd(new User(name, age, role));
