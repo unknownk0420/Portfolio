@@ -99,7 +99,7 @@ class UserInfo {
         boolean found = false;
         for (int i = 0; i < count; i++) {
             if (users[i].getUserName().equals(name)) {
-                for (int j = i; j < count - 1; j++) {//
+                for (int j = i; j < count - 1; j++) {
                     users[j] = users[j + 1];//뒤에 있는 데이터를 한 칸씩 당겨서 맨 뒤에 빈 배열을 만듬
                 }
                 users[count--] = null;//빈 배열을 삭제
