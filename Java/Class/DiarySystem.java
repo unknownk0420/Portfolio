@@ -1,4 +1,5 @@
 import java.util.Scanner;
+
 class Constants {
     protected final static int MAX_MEMBERSHIP_COUNT = 100;
 }
