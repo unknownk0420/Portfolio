@@ -100,7 +100,7 @@ class ShoppingMall {
         }
     }
 }
-public class miniShoppingMall {
+public class MiniShoppingMall {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         ShoppingMall shoppingMall = new ShoppingMall();
