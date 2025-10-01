@@ -141,3 +141,5 @@ public class Main {
 // job이 참조하는 실제 객체는 Warrior 타입이다.
 // 따라서 AttackAble 인터페이스에 정의된 attackAble() 메서드를 사용하려면,
 // job을 AttackAble 타입으로 형 변환(캐스팅) 해야 한다.
+//Character와 AttackAble이 직접 상속 관계는 없지만,
+//Warrior라는 **중간 다리(자식 클래스)**가 둘을 연결해 주는 것이다.
