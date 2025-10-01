@@ -136,11 +136,8 @@ public class Main {
     }
 }
 
-// AttackAble player = (AttackAble) job;
-// job 변수는 Character 타입이므로,
-// Warrior 객체 내부의 Character 부분만 참조할 수 있다.
-// 따라서 attackAble() 메서드를 사용하려면 형 변환이 필요하다.
-// 이때 형변환은 "업캐스팅"이 아닌 "다운캐스팅"이다.
-// 왜냐하면 Character와 AttackAble은 서로 상속 관계(부모-자식)가 아니기 때문이다.
-// 단, Warrior 클래스가 둘 다를 상속/구현하고 있기 때문에,
-// job을 AttackAble로 안전하게 형변환할 수 있다.
+// job은 Character 타입이므로, 현재는 Character 타입만 참조하고 있다.
+// 하지만 Warrior 클래스는 Character를 상속하고, AttackAble 인터페이스도 구현하고 있기 때문에,
+// job이 참조하는 실제 객체는 Warrior 타입이다.
+// 따라서 AttackAble 인터페이스에 정의된 attackAble() 메서드를 사용하려면,
+// job을 AttackAble 타입으로 형 변환(캐스팅) 해야 한다.
