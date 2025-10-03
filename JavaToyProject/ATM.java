@@ -142,20 +142,20 @@ public class Main {
             int select = sc.nextInt();
             switch (select) {
                 case 1:
-                    System.out.println("아이디를 입력해주세요:");
+                    System.out.println("아이디를 입력해주세요.");
                     String id = sc.next();
                     if (userManager.duplication(id)) {
                         System.out.println("이미 존재하는 아이디 입니다.");
                         return;
                     }
-                    System.out.println("비밀번호를 입력해주세요:");
+                    System.out.println("비밀번호를 입력해주세요.");
                     String pw = sc.next();
                     userManager.addUser(new User(id, pw));
                     break;
                 case 2:
-                    System.out.println("아이디를 입력해주세요:");
+                    System.out.println("아이디를 입력해주세요.");
                     id = sc.next();
-                    System.out.println("비밀번호를 입력해주세요:");
+                    System.out.println("비밀번호를 입력해주세요.");
                     pw = sc.next();
                     userLogin = userManager.signIn(id, pw);
                     if (userLogin != null) {
