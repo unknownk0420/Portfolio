@@ -1,60 +1,90 @@
 import java.util.*;
 
 class Constants {
-    public final static int MAX_COUNT = 100;
-    public final static String ADMIN_PIN = "1234";
+    final static int MAX_COUNT = 100;
 }
 
-class User {
+interface Account {
+    void deposit(int amount);
+
+    void withdraw(int amount);
+}
+
+class User implements Account {
+    private int balance;
     private String id;
     private String pw;
-    private int balance;
-    public static User[] users = new User[Constants.MAX_COUNT];
-    public static int count = 0;
 
-    public User(String id, String pw, int balance) {
+    public User(String id, String pw) {
         this.id = id;
         this.pw = pw;
-        this.balance = balance;
+    }
+
+    @Override
+    public void deposit(int amount) {
+        balance += amount;
+    }
+
+    @Override
+    public void withdraw(int amount) {
+        if (balance >= amount) {
+            balance -= amount;
+        } else {
+            System.out.println("잔액이 부족합니다.");
+        }
     }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 
-    public void addBalance(int amount) {
-        this.balance += amount;
+    public String getPw() {
+        return pw;
     }
 
-    public void diffBalance(int amount) {
-        this.balance -= amount;
-    }
-
-    public int getBalance() {
-        return this.balance;
-    }
-
-    public void setBalance(int amount) {
-        if (amount >= 0) {
-            this.balance = amount;
-        } else {
-            System.out.println("잔액은 0보다 작을 수 없습니다.");
-        }
-    }
-
-    public void modify(String id, String newPw) {
-        for (int i = 0; i < count; i++) {
-            if (users[i].getId().equals(id)) {
-                users[i].pw = newPw;
-                System.out.println("비밀번호 변경 완료");
-                return;
+    public void transfer(Scanner sc, UserManager userManager) {
+        User target = null;
+        System.out.println("송금할 아이디를 입력해주세요.");
+        String id = sc.next();
+        for (int i = 0; i < userManager.count; i++) {
+            if (userManager.users[i].getId().equals(id)) {
+                target = userManager.users[i];
+                break;
             }
         }
-        System.out.println("해당 아이디를 찾을 수 없습니다.");
+        if (target == null) {
+            System.out.println("해당 아이디가 존재하지 않습니다.");
+            return;
+        }
+        System.out.println("송금할 금액을 입력하세요.");
+        int transfer = sc.nextInt();
+        if (transfer <= 0) {
+            System.out.println("금액은 0보다 커야 합니다.");
+            return;
+        }
+        if (this.balance < transfer) {
+            System.out.println("잔액이 부족합니다.");
+            return;
+        }
+        this.balance -= transfer;
+        target.balance += transfer;
+        System.out.println(id + "님에게 " + transfer + "송금 완료. 현재 잔액: " + this.balance);
+    }
+}
+
+class UserManager {
+    User[] users = new User[Constants.MAX_COUNT];
+    int count = 0;
+
+    public void addUser(User user) {
+        if (count < users.length) {
+            users[count++] = user;
+        } else {
+            System.out.println("더이상 사용자 정보를 입력할 수 없습니다.");
+        }
     }
 
-
-    public boolean isDuplication(String id) {
+    public boolean duplication(String id) {
         for (int i = 0; i < count; i++) {
             if (users[i].getId().equals(id)) {
                 return true;
@@ -64,257 +94,118 @@ class User {
     }
 
     public void signUp(Scanner sc) {
-        System.out.println("회원가입을 시작합니다.");
         System.out.println("아이디를 입력해주세요.");
-        String id;
-        while (true) {
-            id = sc.next();
-            if (isDuplication(id)) {
-                System.out.println("중복된 아이디입니다. 다시 아이디를 입력해주세요.");
-            } else {
-                break;
-            }
+        String id = sc.next();
+        if (duplication(id)) {
+            System.out.println("중복된 아이디입니다.");
+            return;
         }
         System.out.println("비밀번호를 입력해주세요.");
         String pw = sc.next();
-        System.out.println("회원가입이 성공하였습니다.");
-        users[count++] = new User(id, pw, 0);
+        addUser(new User(id, pw));
     }
 
-    public static User signIn(Scanner sc) {
-        System.out.println("로그인을 시작합니다.");
+    public User signIn(Scanner sc) {
         System.out.println("아이디를 입력해주세요.");
         String id = sc.next();
         System.out.println("비밀번호를 입력해주세요.");
         String pw = sc.next();
         for (int i = 0; i < count; i++) {
-            if (users[i].id.equals(id) && users[i].pw.equals(pw)) {
-                System.out.println("로그인이 성공하였습니다.");
+            if (users[i].getId().equals(id) && users[i].getPw().equals(pw)) {
+                System.out.println("로그인 성공");
                 return users[i];
             }
         }
-        System.out.println("로그인이 실패하였습니다.");
+        System.out.println("로그인 실패");
         return null;
     }
 
-    public void deposit(Scanner sc) {
-        System.out.println("입금할 금액을 입력해주세요.");
-        int deposit = sc.nextInt();
-        if (deposit <= 0) {
-            System.out.println("금액은 0보다 커야합니다.");
-            return;
-        }
-        addBalance(deposit);
-        System.out.println(deposit + "원이 입금되었습니다. 현재 잔액: " + this.balance + "원");
-    }
-
-    public void withdraw(Scanner sc) {
-        System.out.println("출금할 금액을 입력해주세요.");
-        int withdraw = sc.nextInt();
-        if (withdraw <= 0) {
-            System.out.println("금액은 0보다 커야합니다.");
-            return;
-        }
-        if (balance >= withdraw) {
-            diffBalance(withdraw);
-            System.out.println(withdraw + "원이 출금되었습니다. 현재 잔액: " + this.balance + "원");
-        } else {
-            System.out.println("잔액이 부족합니다.");
-        }
-    }
-
-    public void transfer(Scanner sc) {
-        System.out.println("송금할 아이디를 입력해주세요.");
-        String targetId = sc.next();
-        User targetUser = null;
-        for (int i = 0; i < count; i++) {
-            if (users[i].getId().equals(targetId)) {
-                targetUser = users[i];
-                break;
-            }
-        }
-        if (targetUser == null) {
-            System.out.println("해당 아이디가 존재하지 않습니다.");
-            return;
-        }
-        System.out.println("송금할 금액을 입력하세요.");
-        int transfer = sc.nextInt();
-        if (transfer <= 0) {
-            System.out.println("금액은 0보다 커야합니다.");
-            return;
-        }
-        if (this.balance < transfer) {
-            System.out.println("잔액이 부족합니다.");
-            return;
-        }
-        this.diffBalance(transfer);
-        targetUser.addBalance(transfer);
-        System.out.println(targetId + "님에게 " + transfer + "송금 완료. 현재 잔액: " + this.balance + "원");
+    public User getSignOut() {
+        System.out.println("로그아웃 되었습니다.");
+        return null;
     }
 }
-class AdminUser extends User {
 
-    public AdminUser() {
-        super(null, null, 0);
+class Client {
+    private Account account;
+    private Scanner sc = new Scanner(System.in);
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
-    public void adminMode(Scanner sc) {
-        System.out.println("관리자 PIN을 입력해주세요.");
-        String pin = sc.next();
-        if (!pin.equals(Constants.ADMIN_PIN)) {
-            System.out.println("잘못된 PIN입니다.");
-            return;
-        }
+    public void deposit() {
+        System.out.println("입금 금액을 입력해주세요.");
+        int depositAmount = sc.nextInt();
+        account.deposit(depositAmount);
+    }
+
+    public void withdraw() {
+        System.out.println("출금 금액을 입력해주세요.");
+        int withdrawAmount = sc.nextInt();
+        account.withdraw(withdrawAmount);
+    }
+
+    public void run(UserManager userManager) {
+        User userLogin = null;
         while (true) {
-            System.out.println("1. 모든 사용자 목록 보기");
-            System.out.println("2. 비밀번호 변경");
-            System.out.println("3. 사용자 아이디 삭제");
-            System.out.println("4. 사용자 잔액 변경");
-            System.out.println("5. 사용자 현재 잔액 보기");
-            System.out.println("6. 종료");
-            int choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    viewAllUser();
-                    break;
-                case 2:
-                    resetUserPw(sc);
-                    break;
-                case 3:
-                    deleteUser(sc);
-                    break;
-                case 4:
-                    setUserBalance(sc);
-                    break;
-                case 5:
-                    viewUserBalance(sc);
-                    break;
-                case 6:
-                    return;
-                default:
-                    System.out.println("잘못된 입력입니다.");
-            }
-        }
-    }
-
-    public void viewAllUser() {
-        System.out.println("총 사용자 수: " + count);
-        for (int i = 0; i < count; i++) {
-            System.out.println(" - " + users[i].getId());
-        }
-    }
-
-
-    public void resetUserPw(Scanner sc) {
-        System.out.println("아이디를 입력해주세요.");
-        String id = sc.next();
-        System.out.println("새 비밀번호를 입력해주세요.");
-        String newPw = sc.next();
-        modify(id, newPw);
-    }
-
-    public void deleteUser(Scanner sc) {
-        System.out.println("삭제할 사용자 아이디:");
-        String id = sc.next();
-        for (int i = 0; i < count; i++) {
-            if (users[i].getId().equals(id)) {
-                for (int j = i; j < count - 1; j++) {
-                    users[j] = users[j + 1];
-                }
-                users[count - 1] = null;
-                count--;
-                System.out.println(id + "님의 아이디를 삭제하였습니다.");
-                return;
-            }
-        }
-        System.out.println("해당 아이디가 존재하지 않습니다.");
-    }
-
-    public void setUserBalance(Scanner sc) {
-        System.out.println("잔액 설정할 사용자 아이디:");
-        String id = sc.next();
-        System.out.println("새 잔액:");
-        int amount = sc.nextInt();
-        for (int i = 0; i < count; i++) {
-            if (users[i].getId().equals(id)) {
-                users[i].setBalance(amount);
-                System.out.println("현재 " + id + "님의 잔액은 " + amount + "원으로 설정되었습니다.");
-                return;
-            }
-        }
-        System.out.println("해당 아이디를 찾지 못했습니다.");
-    }
-
-    public void viewUserBalance(Scanner sc) {
-        System.out.println("조회할 사용자 아이디:");
-        String id = sc.next();
-        for (int i = 0; i < count; i++) {
-            if (users[i].getId().equals(id)) {
-                System.out.println(id + "님의 잔액은 " + users[i].getBalance() + "원입니다.");
-                return;
-            }
-        }
-        System.out.println("해당 아이디를 찾을 수 없습니다.");
-    }
-}
-public class ATM {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        AdminUser adminUser = new AdminUser();
-        User login = null;
-
-        while (true) {
-            System.out.println("1.회원가입");
+            System.out.println("1. 회원가입");
             System.out.println("2. 로그인");
             System.out.println("3. 로그아웃");
             System.out.println("4. 입금");
             System.out.println("5. 출금");
             System.out.println("6. 송금");
-            System.out.println("7. 관리자 모드");
-            System.out.println("8. 종료");
+            System.out.println("7. 종료");
             int select = sc.nextInt();
             switch (select) {
                 case 1:
-                    adminUser.signUp(sc);
+                    userManager.signUp(sc);
                     break;
                 case 2:
-                    login = User.signIn(sc);
+                    userLogin = userManager.signIn(sc);
+                    if (userLogin != null) {
+                        setAccount(userLogin);
+                    }
                     break;
                 case 3:
-                    login = null;
-                    System.out.println("로그아웃 되었습니다.");
+                    userLogin = userManager.getSignOut();
+                    setAccount(null);
                     break;
                 case 4:
-                    if (login != null) {
-                        login.deposit(sc);
+                    if (userLogin != null) {
+                        deposit();
                     } else {
                         System.out.println("로그인 후 이용해주세요.");
                     }
                     break;
                 case 5:
-                    if (login != null) {
-                        login.withdraw(sc);
+                    if (userLogin != null) {
+                        withdraw();
                     } else {
                         System.out.println("로그인 후 이용해주세요.");
                     }
                     break;
                 case 6:
-                    if (login != null) {
-                        login.transfer(sc);
+                    if (userLogin != null) {
+                        userLogin.transfer(sc, userManager);
                     } else {
                         System.out.println("로그인 후 이용해주세요.");
                     }
                     break;
                 case 7:
-                    adminUser.adminMode(sc);
-                    break;
-                case 8:
-                    System.out.println("시스템을 종료합니다.");
-                    sc.close();
+                    System.out.println("ATM을 종료합니다.");
                     return;
                 default:
-                    System.out.println("잘못된 입력입니다.");
+                    System.out.println("다시 올바른 숫자를 입력해주세요.");
             }
         }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        UserManager userManager = new UserManager();
+        Client client = new Client();
+        client.run(userManager);
     }
 }
