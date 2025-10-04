@@ -6,6 +6,14 @@ interface Store {
     void orderInfo(Product product);
 }
 
+interface Product {
+    String getProductName();
+
+    int getProductPrice();
+
+    int getProductQuantity();
+}
+
 class Customer {
     private Store store;
     private String name;
@@ -24,7 +32,7 @@ class Customer {
 
     public void printInfo(Product product) {
         store.processOrder(this, product);
-        store.processPayment(product.getPrice() * product.getQuantity());
+        store.processPayment(product.getProductPrice() * product.getProductQuantity());
         store.orderInfo(product);
     }
 }
@@ -45,39 +53,69 @@ class SimpleStore implements Store {
 
     @Override
     public void orderInfo(Product product) {
-        System.out.println("주문 내역: " + product.getProductName() + " * " + product.getQuantity() + " = " + product.getPrice() * product.getQuantity() + "원");
+        System.out.println("주문 내역: " + product.getProductName() + " * " + product.getProductQuantity() + " = " + product.getProductPrice() * product.getProductQuantity() + "원");
     }
 }
 
-class Product {
+class Coffee implements Product {
     private int price;
     private int quantity;
-    private String productName;
 
-    public Product(int price, int quantity, String productName) {
+    public Coffee(int price, int quantity){
         this.price = price;
         this.quantity = quantity;
-        this.productName = productName;
     }
 
-    public int getPrice() {
+    @Override
+    public String getProductName() {
+        return "커피";
+    }
+
+    @Override
+    public int getProductPrice() {
         return price;
     }
 
-    public int getQuantity() {
+    @Override
+    public int getProductQuantity() {
         return quantity;
     }
+}
 
+class Sandwich implements Product {
+    private int price;
+    private int quantity;
+
+    public Sandwich (int price, int quantity){
+        this.price = price;
+        this.quantity = quantity;
+    }
+
+    @Override
     public String getProductName() {
-        return productName;
+        return "샌드위치";
+    }
+
+    @Override
+    public int getProductPrice() {
+        return price;
+    }
+
+    @Override
+    public int getProductQuantity() {
+        return quantity;
     }
 }
+
 public class Main {
     public static void main(String[] args) {
-        Product product = new Product(5000, 1, "커피");
-        Customer customer = new Customer("Alice");
         SimpleStore simpleStore = new SimpleStore();
+        Product coffee = new Coffee(5000, 1);
+        Product sandwich = new Sandwich(3000, 2);
+        Customer customer = new Customer("Alice");
         customer.setStore(simpleStore);
-        customer.printInfo(product);
+        customer.printInfo(coffee);
+        System.out.println("----------");
+        customer.printInfo(sandwich);
     }
 }
