@@ -2,7 +2,7 @@ import java.util.*;
 
 interface PlayerGameSystem {
     void playerBattle(Monster monster);
-    void playerTakeDamage(Monster monster, int damage);
+    void playerTakeDamage(int damage);
     void playerGameOver(Monster monster);
 }
 
@@ -34,7 +34,7 @@ class CharacterInfo {
         return playerAttack;
     }
 
-    public void setPlayerHeathPoint(Monster monster, int decreasePlayerHeathPoint) {
+    public void setPlayerHeathPoint(int decreasePlayerHeathPoint) {
         this.playerHeathPoint -= decreasePlayerHeathPoint;
         if (this.playerHeathPoint > 0) {
             System.out.println(this.getPlayerName() + "님의 체력은 " + this.playerHeathPoint + "입니다.");
@@ -61,8 +61,8 @@ class Warrior extends CharacterInfo implements PlayerGameSystem {
     }
 
     @Override
-    public void playerTakeDamage(Monster monster, int damage) {
-        this.setPlayerHeathPoint(monster, damage);
+    public void playerTakeDamage(int damage) {
+        this.setPlayerHeathPoint(damage);
     }
 
     @Override
@@ -87,8 +87,8 @@ class Archer extends CharacterInfo implements PlayerGameSystem {
     }
 
     @Override
-    public void playerTakeDamage(Monster monster, int damage) {
-        this.setPlayerHeathPoint(monster, damage);
+    public void playerTakeDamage(int damage) {
+        this.setPlayerHeathPoint(damage);
     }
 
     @Override
@@ -114,8 +114,8 @@ class Mage extends CharacterInfo implements PlayerGameSystem {
     }
 
     @Override
-    public void playerTakeDamage(Monster monster, int damage) {
-        this.setPlayerHeathPoint(monster, damage);
+    public void playerTakeDamage(int damage) {
+        this.setPlayerHeathPoint(damage);
     }
 
     @Override
@@ -265,20 +265,20 @@ public class Main {
     private static ArrayList<Monster> monsters = new ArrayList<>();
     private static ArrayList<Item> items = new ArrayList<>();
 
-    private static void choiceNumVar(int choiceNum) {
+    private static void choiceNumVar(int choiceNum){
         System.out.println(characterInfos.get(choiceNum - 1).getPlayerName() + "님이 전투합니다.");
     }
 
-    private static void battle(int choiceNum, int monsterChoice) {
+    private static void battle(int choiceNum, int monsterChoice){
         System.out.println(monsters.get(monsterChoice - 1).getMonsterName() + "과 전투합니다.");
         playerGameSystems.get(choiceNum - 1).playerBattle(monsters.get(monsterChoice - 1));
         monsterGameSystems.get(monsterChoice - 1).monsterTakeDamage(items.get(monsterChoice - 1), characterInfos.get(choiceNum - 1).getPlayerAttack());
         monsterGameSystems.get(monsterChoice - 1).monsterBattle(characterInfos.get(choiceNum - 1));
-        playerGameSystems.get(choiceNum - 1).playerTakeDamage(monsters.get(monsterChoice - 1), monsters.get(monsterChoice - 1).getMonsterAttack());
+        playerGameSystems.get(choiceNum - 1).playerTakeDamage(monsters.get(monsterChoice - 1).getMonsterAttack());
         playerGameSystems.get(choiceNum - 1).playerGameOver(monsters.get(monsterChoice - 1));
     }
 
-    private static void itemFit(Item item, String itemName, int itemChoice) {
+    private static void itemFit(Item item, String itemName, int itemChoice){
         item.fitItem(characterInfos.get(itemChoice - 1), itemName);
     }
 
