@@ -258,18 +258,49 @@ class UniqueItem extends Item {
     }
 }
 
-public class Main {
-    private static ArrayList<CharacterInfo> characterInfos = new ArrayList<>();
-    private static ArrayList<PlayerGameSystem> playerGameSystems = new ArrayList<>();
-    private static ArrayList<MonsterGameSystem> monsterGameSystems = new ArrayList<>();
-    private static ArrayList<Monster> monsters = new ArrayList<>();
-    private static ArrayList<Item> items = new ArrayList<>();
+class GameManager {
+     private ArrayList<CharacterInfo> characterInfos = new ArrayList<>();
+     private ArrayList<PlayerGameSystem> playerGameSystems = new ArrayList<>();
+     private ArrayList<MonsterGameSystem> monsterGameSystems = new ArrayList<>();
+     private ArrayList<Monster> monsters = new ArrayList<>();
+     private ArrayList<Item> items = new ArrayList<>();
 
-    private static void choiceNumVar(int choiceNum){
+     public void gameInfoAdd() {
+
+         CharacterInfo warrior = new Warrior("전사", 1000, 30);
+         CharacterInfo archer = new Archer("궁수", 800, 50);
+         CharacterInfo mage = new Mage("마법사", 650, 65);
+
+         Monster dragon = new Dragon("드래곤", 10000, 100);
+         Monster ghost = new Ghost("고스트", 8000, 80);
+
+         Item legendaryItem = new LegendaryItem(0);
+         Item uniqueItem = new UniqueItem(0);
+
+         characterInfos.add(warrior);
+         characterInfos.add(archer);
+         characterInfos.add(mage);
+
+         playerGameSystems.add((PlayerGameSystem) warrior);
+         playerGameSystems.add((PlayerGameSystem) archer);
+         playerGameSystems.add((PlayerGameSystem) mage);
+
+
+         monsterGameSystems.add((MonsterGameSystem) dragon);
+         monsterGameSystems.add((MonsterGameSystem) ghost);
+
+         monsters.add(dragon);
+         monsters.add(ghost);
+
+         items.add(legendaryItem);
+         items.add(uniqueItem);
+     }
+
+    public void choiceNumVar(int choiceNum){
         System.out.println(characterInfos.get(choiceNum - 1).getPlayerName() + "님이 전투합니다.");
     }
 
-    private static void battle(int choiceNum, int monsterChoice){
+    public void battle(int choiceNum, int monsterChoice){
         System.out.println(monsters.get(monsterChoice - 1).getMonsterName() + "과 전투합니다.");
         playerGameSystems.get(choiceNum - 1).playerBattle(monsters.get(monsterChoice - 1));
         monsterGameSystems.get(monsterChoice - 1).monsterTakeDamage(items.get(monsterChoice - 1), characterInfos.get(choiceNum - 1).getPlayerAttack());
@@ -278,43 +309,11 @@ public class Main {
         playerGameSystems.get(choiceNum - 1).playerGameOver(monsters.get(monsterChoice - 1));
     }
 
-    private static void itemFit(Item item, String itemName, int itemChoice){
+    public void itemFit(Item item, String itemName, int itemChoice){
         item.fitItem(characterInfos.get(itemChoice - 1), itemName);
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        CharacterInfo warrior = new Warrior("전사", 1000, 30);
-        CharacterInfo archer = new Archer("궁수", 800, 50);
-        CharacterInfo mage = new Mage("마법사", 650, 65);
-
-        Monster dragon = new Dragon("드래곤", 10000, 100);
-        Monster ghost = new Ghost("고스트", 8000, 80);
-
-        Item legendaryItem = new LegendaryItem(0);
-        Item uniqueItem = new UniqueItem(0);
-
-        characterInfos.add(warrior);
-        characterInfos.add(archer);
-        characterInfos.add(mage);
-
-        playerGameSystems.add((PlayerGameSystem) warrior);
-        playerGameSystems.add((PlayerGameSystem) archer);
-        playerGameSystems.add((PlayerGameSystem) mage);
-
-
-        monsterGameSystems.add((MonsterGameSystem) dragon);
-        monsterGameSystems.add((MonsterGameSystem) ghost);
-
-        monsters.add(dragon);
-        monsters.add(ghost);
-
-        items.add(legendaryItem);
-        items.add(uniqueItem);
-
-        int choiceNum = 0;
-
+    public void gameSystem(Scanner sc, int choiceNum) {
         while (true) {
             System.out.println("게임에 오신것을 환영합니다.");
             System.out.println("1. 캐릭터 선택");
@@ -389,5 +388,19 @@ public class Main {
                     System.out.println("잘못된 선택입니다.");
             }
         }
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        GameManager gameManager = new GameManager();
+
+        int choiceNum = 0;
+
+        gameManager.gameInfoAdd();
+        gameManager.gameSystem(sc, choiceNum);
     }
 }
